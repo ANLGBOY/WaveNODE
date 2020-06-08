@@ -35,15 +35,18 @@ def synthesize(model, temp, num_sample):
             x, c = x.to(device), c.to(device)
             q_0 = Normal(x.new_zeros(x.size()), x.new_ones(x.size()))
             z = q_0.sample()
+            
+            # costumized sampling method
             a = torch.FloatTensor(z.shape).uniform_(temp, 1.0).to(device)
             z = z * a
+
             torch.cuda.synchronize()
             timestemp = time.time()
             with torch.no_grad():
                 y_gen = model.reverse(z, c).squeeze()
 
             wav = y_gen.to(torch.device("cpu")).data.numpy()
-            wav_name = '{}/{}.wav'.format(sample_path, (batch_idx // 40) + 1)
+            wav_name = '{}/{}.wav'.format(sample_path, batch_idx)
             torch.cuda.synchronize()
             print('{} seconds'.format(time.time() - timestemp))
             librosa.output.write_wav(wav_name, wav, sr=22050)

@@ -188,7 +188,7 @@ class CNF(nn.Module):
             states,
             integration_times.to(x),
             atol=[self.atol, self.atol, self.atol],
-            rtol=[self.rtol, self.rtol, self.atol],
+            rtol=[self.rtol, self.rtol, self.rtol],
             method=self.solver,
             options=self.solver_options,
         )
